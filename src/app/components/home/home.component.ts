@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
@@ -9,5 +9,4 @@ import {TranslateModule} from '@ngx-translate/core';
   templateUrl: './home.component.html'
 })
 export class HomeComponent {
-
 }

@@ -5,5 +5,4 @@ export class MissingTranslationKeyHandler implements MissingTranslationHandler {
     console.warn(`Missing translations: "${params.key}" `);
     return `**MISSING KEY: ${params.key}**`;
   }
-
 }
