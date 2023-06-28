@@ -9,6 +9,7 @@ import {importProvidersFrom} from '@angular/core';
 import {MissingTranslationKeyHandler} from './app/utils/missing-translation-key.handler';
 import {HttpBackend, HttpClientModule} from '@angular/common/http';
 import {MultiTranslateHttpLoader} from 'ngx-translate-multi-http-loader';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 function HttpLoaderFactory(http: HttpBackend): MultiTranslateHttpLoader {
   return new MultiTranslateHttpLoader(http, [
@@ -21,6 +22,7 @@ bootstrapApplication(AppComponent, {
     DialogService,
     MessageService,
     ConfirmationService,
+    importProvidersFrom(BrowserAnimationsModule),
     provideRouter(MAIN_ROUTES),
     importProvidersFrom(HttpClientModule),
     importProvidersFrom(
