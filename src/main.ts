@@ -4,12 +4,13 @@ import {DialogService} from 'primeng/dynamicdialog';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {provideRouter} from '@angular/router';
 import {MAIN_ROUTES} from './main.routes';
-import {MissingTranslationHandler, TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {importProvidersFrom} from '@angular/core';
+import {MissingTranslationHandler, TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
+import {APP_INITIALIZER, importProvidersFrom} from '@angular/core';
 import {MissingTranslationKeyHandler} from './app/utils/missing-translation-key.handler';
 import {HttpBackend, HttpClientModule} from '@angular/common/http';
 import {MultiTranslateHttpLoader} from 'ngx-translate-multi-http-loader';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {LANGS} from './app/utils/enum';
 
 function HttpLoaderFactory(http: HttpBackend): MultiTranslateHttpLoader {
   return new MultiTranslateHttpLoader(http, [
@@ -17,14 +18,20 @@ function HttpLoaderFactory(http: HttpBackend): MultiTranslateHttpLoader {
   ]);
 }
 
+function translateFactory(translate: TranslateService) {
+  return async () => {
+    translate.setDefaultLang(LANGS.IT);
+    translate.use(LANGS.IT);
+    return new Promise(resolve => {
+      translate.onLangChange.subscribe(() => resolve(() => {
+        })
+      );
+    });
+  };
+}
+
 bootstrapApplication(AppComponent, {
   providers: [
-    DialogService,
-    MessageService,
-    ConfirmationService,
-    importProvidersFrom(BrowserAnimationsModule),
-    provideRouter(MAIN_ROUTES),
-    importProvidersFrom(HttpClientModule),
     importProvidersFrom(
       TranslateModule.forRoot({
         missingTranslationHandler: {
@@ -38,6 +45,18 @@ bootstrapApplication(AppComponent, {
           deps: [HttpBackend]
         }
       })
-    )
+    ),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: translateFactory,
+      deps: [TranslateService],
+      multi: true
+    },
+    importProvidersFrom(BrowserAnimationsModule),
+    provideRouter(MAIN_ROUTES),
+    importProvidersFrom(HttpClientModule),
+    DialogService,
+    MessageService,
+    ConfirmationService
   ]
 }).catch((err) => console.error(err));
